@@ -114,8 +114,7 @@ function update(x, startX) {
         playerSpawn(); // Redraw the player character
         x += 1;
         console.log(startX);
-        requestAnimationFrame(update(x, startX)); // Request the next frame
-        
+        requestAnimationFrame(() => update(x, startX)); // Request the next frame
     }
 }
 
