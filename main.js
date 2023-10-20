@@ -8,21 +8,38 @@ let startX = 50;
 let startX2 = 50;
 let drawInterval;
 let rotate = false;
-let arr = [];
+let platforms = [];
 let flag = false;
 
 function createFirstPlatform() {
-    ctx.fillStyle = "black";
-    let canvasWidth = c.width;
-    ctx.fillRect(0, 400, 50, 200);
+    platforms.push({ x: 0, y: 400, width: 50, height: 200, color: "black" });
 }
 
 function createPlatform() {
-    ctx.fillStyle = "black";
     let canvasWidth = c.width;
     let x = Math.random() * (canvasWidth - 50);
+    platforms.push({ x: x, y: 400, width: 50, height: 200, color: "black" });
+}
 
-    ctx.fillRect(x, 400, 50, 200);
+function drawPlatforms() {
+    platforms.forEach((platform) => {
+        ctx.fillStyle = platform.color;
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+    });
+}
+
+function movePlatforms() {
+    platforms.forEach((platform) => {
+        platform.x -= 1; // Move the platform towards the player in the X direction
+    });
+
+    // Remove platforms that are out of the canvas
+    platforms = platforms.filter((platform) => platform.x + platform.width > 0);
+
+    // Create new platforms to replace removed ones
+    while (platforms.length < 3) {
+        createPlatform();
+    }
 }
 
 function playerSpawn() {
@@ -44,10 +61,6 @@ window.addEventListener('mousedown', () => {
     ctx.lineTo(50, startY); // initial lineto position
     ctx.stroke();
 
-    if (flag) {
-        clearInterval(drawRec);
-        clearInterval(drawRecWhite);
-    }
     // Start a continuous drawing loop
     drawInterval = setInterval(() => {
         if (isMouseDown) {
@@ -58,7 +71,6 @@ window.addEventListener('mousedown', () => {
             ctx.stroke();
         }
     }, 5); // Adjust the interval for the desired drawing speed
-
 });
 
 window.addEventListener('mouseup', () => {
@@ -73,32 +85,44 @@ window.addEventListener('mouseup', () => {
     ctx.stroke();
 
     moveRec(40, "blue");
-    moveRecWhite(40, "white");
+    update(40, startX);
+    startX = 50;
     flag = true;
 });
 
 function moveRec(x, color) {
-    drawRec = setInterval(() => {
-        while (x != startX){
-            ctx.fillStyle = color;
-            ctx.fillRect(5, 360, x, 40);
-            x += 1;
-        }
-    }, 1000);
+    if (x != startX) {
+        ctx.fillStyle = color;
+        ctx.fillRect(5, 360, x, 40);
+        x += 1;
+    }
 }
 
 function moveRecWhite(x, color) {
-    drawRecWhite = setInterval(() => {
-        while (x != startX - 40){
-            ctx.fillStyle = color;
-            ctx.fillRect(5, 360, x, 40);
-            x += 1;
-        }
-    }, 1000);
+    if (x != startX - 40) {
+        ctx.fillStyle = color;
+        ctx.fillRect(5, 360, x, 40);
+        x += 1;
+    }
 }
 
-createFirstPlatform();
+function update(x, startX) {
+    if (x != startX) {
+        clearCanvas(); // Clear the canvas only once at the beginning of each frame
+        movePlatforms(); // Move the platforms
+        drawPlatforms(); // Redraw the platforms
+        playerSpawn(); // Redraw the player character
+        x += 1;
+        console.log(startX);
+        requestAnimationFrame(update(x, startX)); // Request the next frame
+        
+    }
+}
+
+
 playerSpawn();
+createFirstPlatform();
 createPlatform();
 createPlatform();
 createPlatform();
+drawPlatforms();
