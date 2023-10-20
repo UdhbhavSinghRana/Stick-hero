@@ -76,48 +76,34 @@ window.addEventListener('mousedown', () => {
 window.addEventListener('mouseup', () => {
     isMouseDown = false;
     clearInterval(drawInterval); // Stop the drawing interval
-
+    
     ctx.strokeStyle = "green";
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.moveTo(50, 400); // start point
     ctx.lineTo(startX, 400); // initial lineto position
     ctx.stroke();
-
-    moveRec(40, "blue");
-    update(40, startX);
-    startX = 50;
+    setTimeout(() => update(40, startX), 500);
     flag = true;
 });
 
-function moveRec(x, color) {
-    if (x != startX) {
-        ctx.fillStyle = color;
-        ctx.fillRect(5, 360, x, 40);
-        x += 1;
-    }
-}
-
-function moveRecWhite(x, color) {
-    if (x != startX - 40) {
-        ctx.fillStyle = color;
-        ctx.fillRect(5, 360, x, 40);
-        x += 1;
-    }
-}
-
 function update(x, startX) {
-    if (x != startX) {
+    if (x !== startX) {
         clearCanvas(); // Clear the canvas only once at the beginning of each frame
         movePlatforms(); // Move the platforms
         drawPlatforms(); // Redraw the platforms
         playerSpawn(); // Redraw the player character
         x += 1;
-        console.log(startX);
-        requestAnimationFrame(() => update(x, startX)); // Request the next frame
+        requestAnimationFrame(() => {
+            update(x, startX); // Continue the animation
+            if (x === startX) {
+                // Reset startX once the animation is complete
+                startX = 50;
+                startY = 400;
+            }
+        });// Request the next frame
     }
 }
-
 
 playerSpawn();
 createFirstPlatform();
