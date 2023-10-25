@@ -10,6 +10,7 @@ let drawInterval;
 let rotate = false;
 let platforms = [];
 let flag = false;
+let score = 0;
 
 function createFirstPlatform() {
     platforms.push({ x: 800, y: 400, width: 50, height: 200, color: "black" });
@@ -103,6 +104,20 @@ window.addEventListener('mouseup', () => {
     flag = true;
 });
 
+function updateScore() {
+    // Iterate through the platforms and check if the player is on one
+    platforms.forEach((platform) => {
+        if (
+            startX + 40 >= platform.x && // Player's right edge
+            startX <= platform.x + platform.width  // Player's left edge
+        ) {
+            // Player has landed on the platform
+            score += 10; // Increase the score by 10 (adjust as needed)
+        }
+        console.log(score);
+    });
+}
+
 function update(x) {
     if (x !== startX + 10) {
         clearCanvas(); // Clear the canvas only once at the beginning of each frame
@@ -112,11 +127,11 @@ function update(x) {
         x += 1;
         if (x !== startX) {
             requestAnimationFrame(() => {
-                console.log(startX);
                 update(x, startX); // Continue the animation
             });   
         }
         else {
+            updateScore();
             startX = 850;
             console.log(startX);
             startY = 400;
