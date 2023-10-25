@@ -28,8 +28,8 @@ function createPlatform() {
 function createPlatformEnd() {
     let canvasWidth = c.width;
     let x = canvasWidth - 50; // Set x to the desired value
-    let minWidth = 50; // Minimum width
-    let maxWidth = 150; // Maximum width
+    let minWidth = 20; // Minimum width
+    let maxWidth = 100; // Maximum width
     let width = minWidth + Math.random() * (maxWidth - minWidth); // Random width within the specified range
 
     platforms.push({ x: x, y: 400, width: width, height: 200, color: "black" });
@@ -112,9 +112,10 @@ function updateScore() {
             startX <= platform.x + platform.width  // Player's left edge
         ) {
             // Player has landed on the platform
-            score += 10; // Increase the score by 10 (adjust as needed)
+           score += 10; // Increase the score by 10 (adjust as needed)
         }
         console.log(score);
+        document.getElementById("score").textContent = score;
     });
 }
 
