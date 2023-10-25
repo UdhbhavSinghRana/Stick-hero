@@ -1,5 +1,5 @@
-let c = document.getElementById("myCanvas");
-let ctx = c.getContext("2d");
+let canvas = document.getElementById("myCanvas");
+let ctx = canvas.getContext("2d");
 let isMouseDown = false;
 let startY = 400;
 let startY2 = 400;
@@ -17,7 +17,7 @@ function createFirstPlatform() {
 }
 
 function createPlatform() {
-    let canvasWidth = c.width;
+    let canvasWidth = canvas.width;
     let minX = 800;  // Minimum x-coordinate
     let maxX = canvasWidth - 50;  // Maximum x-coordinate
     let x = minX + Math.random() * (maxX - minX); // Random x within the specified range
@@ -26,7 +26,7 @@ function createPlatform() {
 }
 
 function createPlatformEnd() {
-    let canvasWidth = c.width;
+    let canvasWidth = canvas.width;
     let x = canvasWidth - 50; // Set x to the desired value
     let minWidth = 20; // Minimum width
     let maxWidth = 100; // Maximum width
@@ -53,7 +53,7 @@ function movePlatforms() {
     platforms = platforms.filter((platform) => platform.x + platform.width > 0);
 
     // Create a new platform if the last platform is far enough to the left
-    if (platforms.length === 0 || platforms[platforms.length - 1].x + platforms[platforms.length - 1].width <= c.width - 100) {
+    if (platforms.length === 0 || platforms[platforms.length - 1].x + platforms[platforms.length - 1].width <= canvas.width - 100) {
         createPlatformEnd();
     }
 }
@@ -61,12 +61,12 @@ function movePlatforms() {
 
 function playerSpawn() {
     ctx.fillStyle = "blue";
-    let canvasWidth = c.width;
+    let canvasWidth = canvas.width;
     ctx.fillRect(805, 360, 40, 40);
 }
 
 function clearCanvas() {
-    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 window.addEventListener('mousedown', () => {
