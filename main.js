@@ -4,22 +4,36 @@ let isMouseDown = false;
 let startY = 400;
 let startY2 = 400;
 let endY = 400;
-let startX = 50;
-let startX2 = 50;
+let startX = 850;
+let startX2 = 850;
 let drawInterval;
 let rotate = false;
 let platforms = [];
 let flag = false;
 
 function createFirstPlatform() {
-    platforms.push({ x: 0, y: 400, width: 50, height: 200, color: "black" });
+    platforms.push({ x: 800, y: 400, width: 50, height: 200, color: "black" });
 }
 
 function createPlatform() {
     let canvasWidth = c.width;
-    let x = Math.random() * (canvasWidth - 50);
+    let minX = 800;  // Minimum x-coordinate
+    let maxX = canvasWidth - 50;  // Maximum x-coordinate
+    let x = minX + Math.random() * (maxX - minX); // Random x within the specified range
+
     platforms.push({ x: x, y: 400, width: 50, height: 200, color: "black" });
 }
+
+function createPlatformEnd() {
+    let canvasWidth = c.width;
+    let x = canvasWidth - 50; // Set x to the desired value
+    let minWidth = 50; // Minimum width
+    let maxWidth = 150; // Maximum width
+    let width = minWidth + Math.random() * (maxWidth - minWidth); // Random width within the specified range
+
+    platforms.push({ x: x, y: 400, width: width, height: 200, color: "black" });
+}
+
 
 function drawPlatforms() {
     platforms.forEach((platform) => {
@@ -29,23 +43,25 @@ function drawPlatforms() {
 }
 
 function movePlatforms() {
+    // Move the platforms towards the player in the X direction
     platforms.forEach((platform) => {
-        platform.x -= 1; // Move the platform towards the player in the X direction
+        platform.x -= 1;
     });
 
-    // Remove platforms that are out of the canvas
+    // Filter out platforms that are out of the canvas
     platforms = platforms.filter((platform) => platform.x + platform.width > 0);
 
-    // Create new platforms to replace removed ones
-    while (platforms.length < 3) {
-        createPlatform();
+    // Create a new platform if the last platform is far enough to the left
+    if (platforms.length === 0 || platforms[platforms.length - 1].x + platforms[platforms.length - 1].width <= c.width - 100) {
+        createPlatformEnd();
     }
 }
+
 
 function playerSpawn() {
     ctx.fillStyle = "blue";
     let canvasWidth = c.width;
-    ctx.fillRect(5, 360, 40, 40);
+    ctx.fillRect(805, 360, 40, 40);
 }
 
 function clearCanvas() {
@@ -57,8 +73,8 @@ window.addEventListener('mousedown', () => {
     ctx.strokeStyle = "red";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(50, 380); // start point
-    ctx.lineTo(50, startY); // initial lineto position
+    ctx.moveTo(850, 380); // start point
+    ctx.lineTo(850, startY); // initial lineto position
     ctx.stroke();
 
     // Start a continuous drawing loop
@@ -67,7 +83,7 @@ window.addEventListener('mousedown', () => {
             // Continuously increase the lineTo position
             startY -= 1; // You can adjust the speed by changing the increment
             startX += 1;
-            ctx.lineTo(50, startY);
+            ctx.lineTo(850, startY);
             ctx.stroke();
         }
     }, 5); // Adjust the interval for the desired drawing speed
@@ -80,10 +96,10 @@ window.addEventListener('mouseup', () => {
     ctx.strokeStyle = "green";
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.moveTo(50, 400); // start point
+    ctx.moveTo(850, 400); // start point
     ctx.lineTo(startX, 400); // initial lineto position
     ctx.stroke();
-    setTimeout(() => update(40), 500);
+    setTimeout(() => update(840), 500);
     flag = true;
 });
 
@@ -101,7 +117,7 @@ function update(x) {
             });   
         }
         else {
-            startX = 50;
+            startX = 850;
             console.log(startX);
             startY = 400;
         }
