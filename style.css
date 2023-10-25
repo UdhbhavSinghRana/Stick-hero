@@ -4,15 +4,19 @@
     padding: 0;
 }
 
-html {
-    height: 100vh;
+html,
+body {
+    max-height: 100vh;
+    overflow: hidden;
 }
 
-body {
-    height: 100vh;
-    background-image: url("./assets/bg.png");
-    background-repeat: no-repeat;
-    background-position: center -135px;
+img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    object-fit: cover;
+    z-index: -10;
 }
 
 .intro {
