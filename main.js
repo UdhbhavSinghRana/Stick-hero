@@ -83,25 +83,28 @@ window.addEventListener('mouseup', () => {
     ctx.moveTo(50, 400); // start point
     ctx.lineTo(startX, 400); // initial lineto position
     ctx.stroke();
-    setTimeout(() => update(40, startX), 500);
+    setTimeout(() => update(40), 500);
     flag = true;
 });
 
-function update(x, startX) {
-    if (x !== startX) {
+function update(x) {
+    if (x !== startX + 10) {
         clearCanvas(); // Clear the canvas only once at the beginning of each frame
         movePlatforms(); // Move the platforms
         drawPlatforms(); // Redraw the platforms
         playerSpawn(); // Redraw the player character
         x += 1;
-        requestAnimationFrame(() => {
-            update(x, startX); // Continue the animation
-            if (x === startX) {
-                // Reset startX once the animation is complete
-                startX = 50;
-                startY = 400;
-            }
-        });// Request the next frame
+        if (x !== startX) {
+            requestAnimationFrame(() => {
+                console.log(startX);
+                update(x, startX); // Continue the animation
+            });   
+        }
+        else {
+            startX = 50;
+            console.log(startX);
+            startY = 400;
+        }
     }
 }
 
