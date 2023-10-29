@@ -12,18 +12,58 @@ let platforms = [];
 let flag = false;
 let score = 0;
 
+const PLATFORM_FIRST_X = 800;
+const PLATFORM_FIRST_Y = 400;
+const PLATFORM_WIDTH = 50;
+const PLATFORM_HEIGHT = 200;
+
+const BOX_DIMENSION = 40;
+const BOX_X = PLATFORM_FIRST_X + ((PLATFORM_WIDTH - BOX_DIMENSION) / 2);
+const BOX_Y = PLATFORM_FIRST_Y - BOX_DIMENSION;
+
+function playerSpawn() {
+    ctx.fillStyle = "blue";
+
+    ctx.fillRect(
+        BOX_X,
+        BOX_Y,
+        BOX_DIMENSION,
+        BOX_DIMENSION
+    );
+}
+
 function createFirstPlatform() {
-    platforms.push({ x: 800, y: 400, width: 50, height: 200, color: "black" });
+    const firstPlatform = {
+        x: PLATFORM_FIRST_X,
+        y: PLATFORM_FIRST_Y,
+        width: PLATFORM_WIDTH,
+        height: PLATFORM_HEIGHT, 
+        color: "black" 
+    }
+
+    platforms.push(firstPlatform);
 }
 
 function createPlatform() {
     let canvasWidth = canvas.width;
-    let minX = 800;  // Minimum x-coordinate
-    let maxX = canvasWidth - 50;  // Maximum x-coordinate
-    let x = minX + Math.random() * (maxX - minX); // Random x within the specified range
 
-    platforms.push({ x: x, y: 400, width: 50, height: 200, color: "black" });
+    let minX = PLATFORM_FIRST_X;                // Minimum x-coordinate
+    let maxX = canvasWidth - PLATFORM_WIDTH;    // Maximum x-coordinate
+
+    let newPlatformX = minX + Math.random() * (maxX - minX);    // Random x within the specified range
+
+    const newPlatform = {
+        x: newPlatformX,
+        y: PLATFORM_FIRST_Y,
+        width: PLATFORM_WIDTH,
+        height: PLATFORM_HEIGHT,
+        color: "black"
+    }
+
+    platforms.push(newPlatform);
 }
+
+// Refactor from here (below)
 
 function createPlatformEnd() {
     let canvasWidth = canvas.width;
@@ -56,13 +96,6 @@ function movePlatforms() {
     if (platforms.length === 0 || platforms[platforms.length - 1].x + platforms[platforms.length - 1].width <= canvas.width - 100) {
         createPlatformEnd();
     }
-}
-
-
-function playerSpawn() {
-    ctx.fillStyle = "blue";
-    let canvasWidth = canvas.width;
-    ctx.fillRect(805, 360, 40, 40);
 }
 
 function clearCanvas() {
@@ -107,13 +140,17 @@ window.addEventListener('mouseup', () => {
 function updateScore() {
     // Iterate through the platforms and check if the player is on one
     platforms.forEach((platform) => {
+        const boxRightX = BOX_X + BOX_DIMENSION;
+        const platformRightX = platform.x + platform.width;
+
         if (
-            startX + 40 >= platform.x && // Player's right edge
-            startX <= platform.x + platform.width  // Player's left edge
+            boxRightX >= platform.x &&      // Player's right edge
+            BOX_X <= platformRightX         // Player's left edge
         ) {
             // Player has landed on the platform
            score += 10; // Increase the score by 10 (adjust as needed)
         }
+
         console.log(score);
         document.getElementById("score").textContent = score;
     });
