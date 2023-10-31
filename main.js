@@ -18,7 +18,7 @@ const PLATFORM_WIDTH = 50;
 const PLATFORM_HEIGHT = 200;
 
 const BOX_DIMENSION = 40;
-const BOX_X = PLATFORM_FIRST_X + ((PLATFORM_WIDTH - BOX_DIMENSION) / 2);
+let BOX_X = PLATFORM_FIRST_X + ((PLATFORM_WIDTH - BOX_DIMENSION) / 2);
 let BOX_Y = PLATFORM_FIRST_Y - BOX_DIMENSION;
 
 function playerSpawn() {
@@ -151,7 +151,6 @@ function drawRec(color, y_cordinate) {
 
 function deadPlayer() {
     BOX_Y += 1;
-    console.log(BOX_Y);
     ctx.clearRect(BOX_X, BOX_Y - 1, BOX_DIMENSION, BOX_DIMENSION);
     drawRec("blue", BOX_Y);
 }
@@ -161,6 +160,22 @@ function gameEnd() {
     if (BOX_Y < 560) {
         requestAnimationFrame(gameEnd);
     } 
+
+}
+function restart() {
+
+    BOX_Y = PLATFORM_FIRST_Y - BOX_DIMENSION;
+    BOX_X = PLATFORM_FIRST_X + ((PLATFORM_WIDTH - BOX_DIMENSION) / 2);
+    platforms = [];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);         
+
+    playerSpawn();
+    createFirstPlatform();
+    createPlatform();
+    createPlatform();
+    createPlatform();
+    drawPlatforms();
+    score = 0;
 }
 
 function updateScore() {
@@ -185,6 +200,11 @@ function updateScore() {
      
     if (gameEndFlag === true) {
         gameEnd();
+        score = 0;
+
+        document.getElementById("score").textContent = score;
+
+        setTimeout(() => restart(), 2000);
     } 
 }
 
