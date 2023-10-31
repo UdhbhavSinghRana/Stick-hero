@@ -19,7 +19,7 @@ const PLATFORM_HEIGHT = 200;
 
 const BOX_DIMENSION = 40;
 const BOX_X = PLATFORM_FIRST_X + ((PLATFORM_WIDTH - BOX_DIMENSION) / 2);
-const BOX_Y = PLATFORM_FIRST_Y - BOX_DIMENSION;
+let BOX_Y = PLATFORM_FIRST_Y - BOX_DIMENSION;
 
 function playerSpawn() {
     ctx.fillStyle = "blue";
@@ -69,7 +69,7 @@ function createPlatformEnd() {
     let canvasWidth = canvas.width;
     let x = canvasWidth - 50; // Set x to the desired value
     let minWidth = 20; // Minimum width
-    let maxWidth = 100; // Maximum width
+    let maxWidth = 40; // Maximum width
     let width = minWidth + Math.random() * (maxWidth - minWidth); // Random width within the specified range
 
     platforms.push({ x: x, y: 400, width: width, height: 200, color: "black" });
@@ -137,8 +137,36 @@ window.addEventListener('mouseup', () => {
     flag = true;
 });
 
+function drawRec(color, y_cordinate) {
+    ctx.fillStyle = color;
+
+    ctx.fillRect(
+        BOX_X,
+        y_cordinate,
+        BOX_DIMENSION,
+        BOX_DIMENSION
+    ); 
+
+}
+
+function deadPlayer() {
+    BOX_Y += 1;
+    console.log(BOX_Y);
+    ctx.clearRect(BOX_X, BOX_Y - 1, BOX_DIMENSION, BOX_DIMENSION);
+    drawRec("blue", BOX_Y);
+}
+
+function gameEnd() {
+    deadPlayer();
+    if (BOX_Y < 560) {
+        requestAnimationFrame(gameEnd);
+    } 
+}
+
 function updateScore() {
     // Iterate through the platforms and check if the player is on one
+    let gameEndFlag = true;
+
     platforms.forEach((platform) => {
         const boxRightX = BOX_X + BOX_DIMENSION;
         const platformRightX = platform.x + platform.width;
@@ -148,12 +176,16 @@ function updateScore() {
             BOX_X <= platformRightX         // Player's left edge
         ) {
             // Player has landed on the platform
-           score += 10; // Increase the score by 10 (adjust as needed)
+            score += 10; // Increase the score by 10 
+            gameEndFlag = false;
         }
 
-        console.log(score);
         document.getElementById("score").textContent = score;
     });
+     
+    if (gameEndFlag === true) {
+        gameEnd();
+    } 
 }
 
 function update(x) {
