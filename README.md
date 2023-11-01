@@ -1,4 +1,4 @@
-# Endless Jumper Game
+# Stick Hero
 
 This is an endless game created using HTML5 Canvas and JavaScript.
 
