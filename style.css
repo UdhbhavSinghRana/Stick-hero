@@ -22,6 +22,7 @@ img {
 
 .intro {
     display: flex;
+    background-color: #5EC4CD;
     justify-content: center;
     align-items: center;
 }
