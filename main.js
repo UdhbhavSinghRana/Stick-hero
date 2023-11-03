@@ -223,7 +223,6 @@ function update(x) {
         else {
             updateScore();
             startX = 850;
-            console.log(startX);
             startY = 400;
         }
     }
